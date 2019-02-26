@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="stylecss.css">
+</head>
+<body>
+    <form>
+        Tytuł: <input type="text" id="title"><br>
+        Treść: <textarea id="content"></textarea><br>
+        <button id="newNoteBtn">Dodaj</button> 
+    </form>
+    <main>
+
+    </main>
+    <script type="text/javascript">
+        let btnSubmit = document.querySelector('#newNoteBtn');
+        btnSubmit.addEventListener('click', function (event){
+            //pobierz tytul i tresc z formularza
+            let title = document.querySelector('#title').value;
+            let content = document.querySelector('#content').value;
+            //stworz diva z notatka
+            let newNote = document.createElement('div');
+            //wepchnij do diva tytul i tresc
+            newNote.innerHTML = 
+                `<h2>${title}</h2>
+                <section>${content}</section>`;
+            //dolacz notatke do worka z notatkami (main)
+            let notesConteiner = document.querySelector('main');
+            notesConteiner.appendChild(newNote);
+            event.preventDefault();
+        })
+    </script>
+</body>
+</html>
