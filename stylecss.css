@@ -1,0 +1,19 @@
+body {
+    background: whitesmoke;
+}
+
+main {
+    padding: 30px;
+    display: flex;
+}
+
+.form {
+    padding: 50px;
+}
+
+.note{
+    background-color: rgb(250, 229, 110);
+    margin: 20px;
+    padding: 20px;
+    width: 200px;
+}
