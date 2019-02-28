@@ -13,12 +13,19 @@ main {
 }
 
 .note{
+    display: flex;
+    flex-direction: column;
     background-color: rgb(250, 229, 110);
     margin: 20px;
     padding: 20px;
     width: 200px;
+    word-break: break-all;
 }
 
 .fas {
     color: brown;
+}
+
+.deleteBtn {
+    align-self: flex-end;
 }
