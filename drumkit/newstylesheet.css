@@ -1,0 +1,19 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(43, 43, 43);
+}
+
+button {
+    margin: 10px;
+    width: 200px;
+}
+
+section {
+    margin: 35px;
+}
+
+audio {
+    margin: 5px;
+}
