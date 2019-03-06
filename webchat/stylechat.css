@@ -1,0 +1,36 @@
+body {
+    background-color: rgb(158, 158, 158);
+}
+
+#chat {
+    background-color: rgba(245, 245, 245, 0.85);
+    width: 550px;
+    margin: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+#chat div {
+    padding: 8px;
+}
+
+#message {
+    height: 30px;
+    width: 300px;
+    margin: 20px;
+}
+
+#btnMessage {
+    width: 200px;
+}
+
+.received-message {
+    background-color: rgba(67, 73, 131, 0.4);
+    margin: 5px 10px;
+}
+
+.sent-message {
+    background-color: rgb(137, 185, 216, 0.9);
+    margin: 5px 10px;
+}
