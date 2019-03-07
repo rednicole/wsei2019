@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        let map;
+        let marker;
+        let krakow = { lat: 50.0646501, lng: 19.9449799 };
+        let userPosition;
+        let userFriends = [];
+        // let randomPosition = { lat: Math.round((Math.random() * 360 - 180) * 1000) / 1000, lng: Math.round((Math.random() * 360 - 180) * 1000) / 1000 }
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 50.0697, lng: 19.944 },
+                zoom: 8
+            });
+            marker = new google.maps.Marker({
+                position: userPosition,
+                map: map,
+                // animation: google.maps.Animation.BOUNCE,
+                animation: google.maps.Animation.DROP
+            });
+            getUserPosition();
+        }
+
+        function getUserPosition() {
+            navigator.geolocation.getCurrentPosition(geoOK, geoFail);
+        }
+
+        function geoOK(data) {
+            userPosition = { lat: data.coords.latitude, lng: data.coords.longitude };
+            //   console.log(data.coords.latitude, data.coords.longitude);
+            changeMarkerPosition();
+            showMyFriends(userPosition);
+        }
+
+        function changeMarkerPosition() {
+            marker.setPosition(userPosition);
+        }
+
+        function showMyFriends(userPos) {
+            for (let i = 1; i <= 10; i++) {
+                const friendPosition = {
+                    lat: userPos.lat += Math.random() / 10 - 0.05,
+                    lng: userPos.lng += Math.random() / 10 - 0.05
+                };
+                const friendMarker = new google.maps.Marker({
+                position: userPosition,
+                map: map,
+                animation: google.maps.Animation.BOUNCE,
+                icon: 'http://maps.google.com/mapfiles/kml/paddle/blu-circle.png'
+            })
+        }}
+
+        function geoFail(err) {
+            console.log(err);
+        }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3oc1OOMd22IA69ls27EgflSovZph1k7M&callback=initMap"
+        async defer></script>
+</body>
+
+</html>
