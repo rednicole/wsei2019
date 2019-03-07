@@ -1,0 +1,20 @@
+body {
+    background-color: rgb(44, 78, 44);
+}
+
+#ball {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: antiquewhite;
+    position: absolute;
+    z-index: 100;
+}
+
+#hole {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background-color: black;
+    position: absolute;
+}
