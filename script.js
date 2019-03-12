@@ -1,111 +1,69 @@
-let notes = [];
-
-let titleHtmlNode;
-let contentHtmlNode;
-
-class Note {
-    constructor(title, content) {
-        this.title = title;
-        this.content = content;
-        this.date = Date.now();
-        this.pinned = false;
-        this.archived = false;
-    }
-}
-
 document.addEventListener('DOMContentLoaded', appStart);
+
+let ctx;
+let video;
+
 function appStart() {
-    const btnSubmit = document.querySelector('#newNoteBtn');
-    // pobierz tytuł i treść z formularza
-    titleHtmlNode = document.querySelector('#title');
-    contentHtmlNode = document.querySelector('#content');
-    btnSubmit.addEventListener('click', addNewNote);
-    getNotesFromLocalStorage();
+    const canvas = document.querySelector('#plotno');
+    ctx = canvas.getContext('2d');
+
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then(mediaStream => {
+            video = document.querySelector('#player');
+            video.srcObject = mediaStream;
+            video.addEventListener('loadedmetadata', () => {
+                video.play();
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                animuj();
+            })
+        })
 }
 
-function getNotesFromLocalStorage() {
-    notes = JSON.parse(localStorage.getItem('notes'));
-    
-    if (notes && notes.length) {
-        notes.sort((a,b) => b.date-a.date);
-        notes.forEach(note => createDivNote(note));
-    } else {
-        notes = [];
+function animuj() {
+    const width = video.videoWidth;
+    const height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, width, height);
+    let imageData = ctx.getImageData(0, 0, width, height);
+    // zmienPixeleNaCzarnoBiale(imageData);
+    greenBox(imageData);
+    ctx.putImageData(imageData, 0, 0);
+
+    requestAnimationFrame(animuj);
+}
+
+function zmienPixeleNaCzarnoBiale(pixs) {
+    for (let i = 0; i < pixs.data.length; i += 4) {
+        const r = pixs.data[i];
+        const g = pixs.data[i + 1];
+        const b = pixs.data[i + 2];
+        const alpha = pixs.data[i + 3];
+
+        const avg = (r + g + b) / 3;
+        pixs.data[i] = avg;
+        pixs.data[i + 1] = avg;
+        pixs.data[i + 2] = avg;
+        pixs.data[i + 3] = alpha;
     }
 }
 
-function addNewNote(event) {
-    // event.preventDefault(); dodanie w html do button 'type="button"' usuwa jego domyślne niechciane zdarzenie
-    
-    // nowy obiekt notatki
-    const note = new Note(titleHtmlNode.value, contentHtmlNode.value);
-    // const note = {
-    //     title: title.value,
-    //     content: content.value
-    // };
+function greenBox(pixs) {
+    for (let i = 0; i < pixs.data.length; i += 4) {
+        let r = pixs.data[i];
+        let g = pixs.data[i + 1];
+        let b = pixs.data[i + 2];
+        let alpha = pixs.data[i + 3];
 
-    // dodajemy notatkę do tablicy i zapisujemy w localStorage
-    addToStorage(note);
-    // stwórz diva z notatką
-    createDivNote(note);
+        const limit = 15;
+        if (r < limit && g < limit && b < limit) {
+            r = 0;
+            g = 200;
+            b = 0;
+        }
 
-    cleanForm();
-}
-
-function cleanForm() {
-    titleHtmlNode.value = '';
-    contentHtmlNode.value = '';
-}
-
-function addToStorage(note) {
-    notes.unshift(note);
-    updateLocalStorage();
-}
-
-function updateLocalStorage() {
-    localStorage.setItem('notes', JSON.stringify(notes));
-}
-
-function createDivNote(note) {
-    const newNote = document.createElement('div');
-    newNote.classList.add('note');
-    newNote.id = `id${note.date}`;
-
-    const removeBtn = document.createElement('i');
-    removeBtn.className = 'fas fa-times deleteBtn';
-    removeBtn.addEventListener('click', removeNote);
-    newNote.appendChild(removeBtn);
-
-    const header = document.createElement('h2');
-    header.innerHTML = note.title;
-    const section = document.createElement('section');
-    section.innerHTML = note.content;
-    newNote.appendChild(header);
-    newNote.appendChild(section);
-
-    const formattedDate = new Date(note.date);
-    const date = document.createElement('div');
-    date.innerHTML = formattedDate.toLocaleString();
-    newNote.appendChild(date);
-
-    const notesContainer = document.querySelector('main');
-    const firstNote = notesContainer.firstChild;
-    notesContainer.insertBefore(newNote, firstNote);
-}
-
-function removeNote() {
-    const noteDiv = this.parentElement;
-    const id = parseInt(noteDiv.id.slice(2));
-    // console.log(id)
-    const idx = notes.findIndex((el) => {
-        return el.date == id;
-    })
-    notes.splice(idx, 1);
-    removeDivNote(this.parentElement);
-    updateLocalStorage();
-}
-
-function removeDivNote(noteDiv) {
-    const notesContainer = noteDiv.parentElement;
-    notesContainer.removeChild(noteDiv);
+        pixs.data[i] = r;
+        pixs.data[i + 1] = g;
+        pixs.data[i + 2] = b;
+        pixs.data[i + 3] = alpha;
+    }
 }
